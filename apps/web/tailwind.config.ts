@@ -79,13 +79,14 @@ const config: Config = {
         "page-title": ["30px", { lineHeight: "1.2", fontWeight: "700" }],
         "section-title": ["24px", { lineHeight: "1.3", fontWeight: "600" }],
         "card-title": ["18px", { lineHeight: "1.4", fontWeight: "600" }],
-        "body": ["14px", { lineHeight: "1.5", fontWeight: "400" }],
-        "small": ["12px", { lineHeight: "1.5", fontWeight: "400" }],
-        "code": ["13px", { lineHeight: "1.5", fontWeight: "500" }],
+        body: ["14px", { lineHeight: "1.5", fontWeight: "400" }],
+        small: ["12px", { lineHeight: "1.5", fontWeight: "400" }],
+        code: ["13px", { lineHeight: "1.5", fontWeight: "500" }],
       },
       boxShadow: {
         subtle: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
-        floating: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+        floating:
+          "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
       },
     },
   },

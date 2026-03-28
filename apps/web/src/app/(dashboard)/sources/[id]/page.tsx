@@ -67,7 +67,9 @@ export default function SourceDetailPage({
               </Card>
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
-                  <CardTitle className="text-sm font-medium">Last Sync</CardTitle>
+                  <CardTitle className="text-sm font-medium">
+                    Last Sync
+                  </CardTitle>
                   <History className="h-4 w-4 text-text-muted" />
                 </CardHeader>
                 <CardContent>
@@ -76,7 +78,9 @@ export default function SourceDetailPage({
               </Card>
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
-                  <CardTitle className="text-sm font-medium">Snapshots</CardTitle>
+                  <CardTitle className="text-sm font-medium">
+                    Snapshots
+                  </CardTitle>
                   <History className="h-4 w-4 text-text-muted" />
                 </CardHeader>
                 <CardContent>
@@ -88,20 +92,26 @@ export default function SourceDetailPage({
             <Card>
               <CardHeader>
                 <CardTitle>Latest Diff Summary</CardTitle>
-                <CardDescription>Changes detected in the last sync.</CardDescription>
+                <CardDescription>
+                  Changes detected in the last sync.
+                </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-center gap-4 border-b border-border pb-4">
                   <div className="flex-1">
                     <p className="text-sm font-mono">/users/profile</p>
-                    <p className="text-xs text-text-muted">Response schema updated.</p>
+                    <p className="text-xs text-text-muted">
+                      Response schema updated.
+                    </p>
                   </div>
                   <Badge variant="modified">Modified</Badge>
                 </div>
                 <div className="flex items-center gap-4">
                   <div className="flex-1">
                     <p className="text-sm font-mono">/legacy/billing</p>
-                    <p className="text-xs text-text-muted">Endpoint deprecated.</p>
+                    <p className="text-xs text-text-muted">
+                      Endpoint deprecated.
+                    </p>
                   </div>
                   <Badge variant="breaking">Removed</Badge>
                 </div>
@@ -112,14 +122,19 @@ export default function SourceDetailPage({
             <Card>
               <CardHeader>
                 <CardTitle>Snapshot History</CardTitle>
-                <CardDescription>All recorded versions of this source.</CardDescription>
+                <CardDescription>
+                  All recorded versions of this source.
+                </CardDescription>
               </CardHeader>
               <CardContent>
-                 <div className="text-sm text-text-muted">
-                    <Link href={`/sources/${params.id}/history`} className="text-primary hover:underline">
-                      View full history timeline
-                    </Link>
-                 </div>
+                <div className="text-sm text-text-muted">
+                  <Link
+                    href={`/sources/${params.id}/history`}
+                    className="text-primary hover:underline"
+                  >
+                    View full history timeline
+                  </Link>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>

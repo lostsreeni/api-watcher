@@ -17,6 +17,27 @@ class UserResponse(BaseModel):
         from_attributes = True
 
 
+class SnapshotResponse(BaseModel):
+    id: int
+    source_id: int
+    hash: str
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+class FetchLogResponse(BaseModel):
+    id: int
+    source_id: int
+    status: str
+    error_message: Optional[str] = None
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
 class Token(BaseModel):
     access_token: str
     token_type: str

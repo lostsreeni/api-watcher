@@ -20,7 +20,7 @@ export function EmptyState({
     <div
       className={cn(
         "flex min-h-[400px] flex-col items-center justify-center rounded-md border border-dashed border-border p-8 text-center animate-in fade-in-50",
-        className
+        className,
       )}
       {...props}
     >
@@ -30,7 +30,9 @@ export function EmptyState({
         </div>
       )}
       <h3 className="mt-4 text-card-title font-semibold">{title}</h3>
-      <p className="mb-4 mt-2 text-sm text-text-muted max-w-sm">{description}</p>
+      <p className="mb-4 mt-2 text-sm text-text-muted max-w-sm">
+        {description}
+      </p>
       {action && <div className="mt-4">{action}</div>}
     </div>
   );

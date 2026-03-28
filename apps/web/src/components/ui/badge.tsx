@@ -24,7 +24,7 @@ function Badge({ className, variant = "info", ...props }: BadgeProps) {
           "border-transparent bg-badge-warning-bg text-badge-warning-text":
             variant === "warning",
         },
-        className
+        className,
       )}
       {...props}
     />

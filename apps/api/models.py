@@ -54,3 +54,40 @@ class Source(Base):
     )
 
     owner = relationship("User", back_populates="sources")
+    snapshots = relationship(
+        "Snapshot", back_populates="source", cascade="all, delete-orphan"
+    )
+    fetch_logs = relationship(
+        "FetchLog", back_populates="source", cascade="all, delete-orphan"
+    )
+
+
+class Snapshot(Base):
+    __tablename__ = "snapshots"
+
+    id = Column(Integer, primary_key=True, index=True)
+    source_id = Column(Integer, ForeignKey("sources.id"), nullable=False)
+
+    hash = Column(String, index=True, nullable=False)  # To avoid duplicate storage
+    raw_content = Column(
+        String, nullable=False
+    )  # The raw fetched content (JSON/YAML/HTML)
+    parsed_content = Column(String, nullable=False)  # Normalized content (JSON string)
+
+    created_at = Column(DateTime(timezone=True), default=datetime.datetime.utcnow)
+
+    source = relationship("Source", back_populates="snapshots")
+
+
+class FetchLog(Base):
+    __tablename__ = "fetch_logs"
+
+    id = Column(Integer, primary_key=True, index=True)
+    source_id = Column(Integer, ForeignKey("sources.id"), nullable=False)
+
+    status = Column(String, nullable=False)  # "success", "error"
+    error_message = Column(String, nullable=True)
+
+    created_at = Column(DateTime(timezone=True), default=datetime.datetime.utcnow)
+
+    source = relationship("Source", back_populates="fetch_logs")
