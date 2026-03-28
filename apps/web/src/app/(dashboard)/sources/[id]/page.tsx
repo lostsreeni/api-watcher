@@ -255,7 +255,7 @@ export default function SourceDetailPage({
                     </div>
                     <div className="mt-4 pt-4 border-t border-border">
                       <Link href={`/changelogs/${latestChangelog.id}`}>
-                        <Button variant="secondary" size="sm">View Full Detail</Button>
+                        <Button variant="secondary">View Full Detail</Button>
                       </Link>
                     </div>
                   </div>
@@ -286,7 +286,7 @@ export default function SourceDetailPage({
                         {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                         <Badge variant={log.severity as any}>{log.severity}</Badge>
                         <Link href={`/changelogs/${log.id}`}>
-                          <Button variant="ghost" size="sm">View</Button>
+                          <Button variant="ghost">View</Button>
                         </Link>
                       </div>
                     </div>

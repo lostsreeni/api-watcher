@@ -19,7 +19,9 @@ def get_changelogs(
 ):
     source = (
         db.query(models.Source)
-        .filter(models.Source.id == source_id, models.Source.owner_id == current_user.id)
+        .filter(
+            models.Source.id == source_id, models.Source.owner_id == current_user.id
+        )
         .first()
     )
     if not source:

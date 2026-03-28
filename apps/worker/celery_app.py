@@ -38,8 +38,8 @@ def send_alerts(source: Source, changelog: Changelog):
         try:
             payload = {
                 "text": f"*{source.name}* update detected!\n"
-                        f"*Severity*: {changelog.severity}\n"
-                        f"*Summary*:\n{changelog.changelog_summary}"
+                f"*Severity*: {changelog.severity}\n"
+                f"*Summary*:\n{changelog.changelog_summary}"
             }
             requests.post(source.alert_slack_webhook, json=payload, timeout=10)
         except Exception as e:
