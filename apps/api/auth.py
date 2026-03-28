@@ -59,11 +59,7 @@ def get_current_user(
         token_data = {"user_id": int(user_id)}
     except JWTError:
         raise credentials_exception
-    user = (
-        db.query(models.User)
-        .filter(models.User.id == token_data["user_id"])
-        .first()
-    )
+    user = db.query(models.User).filter(models.User.id == token_data["user_id"]).first()
     if user is None:
         raise credentials_exception
     return user
@@ -71,9 +67,7 @@ def get_current_user(
 
 @router.post("/register", response_model=schemas.UserResponse)
 def register(user: schemas.UserCreate, db: Session = Depends(database.get_db)):
-    db_user = (
-        db.query(models.User).filter(models.User.email == user.email).first()
-    )
+    db_user = db.query(models.User).filter(models.User.email == user.email).first()
     if db_user:
         raise HTTPException(status_code=400, detail="Email already registered")
     hashed_password = get_password_hash(user.password)
@@ -89,14 +83,8 @@ def login(
     form_data: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(database.get_db),
 ):
-    user = (
-        db.query(models.User)
-        .filter(models.User.email == form_data.username)
-        .first()
-    )
-    if not user or not verify_password(
-        form_data.password, user.hashed_password
-    ):
+    user = db.query(models.User).filter(models.User.email == form_data.username).first()
+    if not user or not verify_password(form_data.password, user.hashed_password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect username or password",

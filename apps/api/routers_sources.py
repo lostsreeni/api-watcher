@@ -15,9 +15,7 @@ def get_sources(
     current_user: models.User = Depends(auth.get_current_user),
 ):
     sources = (
-        db.query(models.Source)
-        .filter(models.Source.owner_id == current_user.id)
-        .all()
+        db.query(models.Source).filter(models.Source.owner_id == current_user.id).all()
     )
     return sources
 
@@ -33,9 +31,7 @@ def create_source(
     current_user: models.User = Depends(auth.get_current_user),
 ):
     # Basic URL validation (since we use str in schema)
-    if not source.url.startswith("http://") and not source.url.startswith(
-        "https://"
-    ):
+    if not source.url.startswith("http://") and not source.url.startswith("https://"):
         raise HTTPException(
             status_code=400, detail="URL must start with http:// or https://"
         )

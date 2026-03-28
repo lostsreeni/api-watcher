@@ -46,9 +46,7 @@ class Source(Base):
     last_checked_at = Column(DateTime(timezone=True), nullable=True)
     last_change_detected_at = Column(DateTime(timezone=True), nullable=True)
 
-    created_at = Column(
-        DateTime(timezone=True), default=datetime.datetime.utcnow
-    )
+    created_at = Column(DateTime(timezone=True), default=datetime.datetime.utcnow)
     updated_at = Column(
         DateTime(timezone=True),
         default=datetime.datetime.utcnow,

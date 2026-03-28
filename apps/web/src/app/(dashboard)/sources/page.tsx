@@ -191,7 +191,7 @@ export default function SourcesPage() {
                           </div>
                         </TableCell>
                         <TableCell>
-                           <Badge variant={source.status === "paused" ? "warning" : source.status === "error" ? "danger" : "info"}>
+                           <Badge variant={source.status === "paused" ? "warning" : source.status === "error" ? "breaking" : "info"}>
                              {source.status}
                            </Badge>
                         </TableCell>
@@ -199,8 +199,8 @@ export default function SourcesPage() {
                            {source.last_checked_at ? new Date(source.last_checked_at).toLocaleString() : "Never"}
                         </TableCell>
                         <TableCell className="text-right flex gap-2 justify-end">
-                           <Button size="sm" onClick={() => handleEditSave(source.id)}>Save</Button>
-                           <Button size="sm" variant="ghost" onClick={() => setEditingSourceId(null)}>Cancel</Button>
+                           <Button className="h-8 px-2 text-xs" onClick={() => handleEditSave(source.id)}>Save</Button>
+                           <Button className="h-8 px-2 text-xs" variant="ghost" onClick={() => setEditingSourceId(null)}>Cancel</Button>
                         </TableCell>
                       </>
                     ) : (
@@ -215,7 +215,7 @@ export default function SourcesPage() {
                            <div className="capitalize text-xs font-medium">{source.type}</div>
                         </TableCell>
                         <TableCell>
-                          <Badge variant={source.status === "paused" ? "warning" : source.status === "error" ? "danger" : "info"}>
+                          <Badge variant={source.status === "paused" ? "warning" : source.status === "error" ? "breaking" : "info"}>
                             {source.status}
                           </Badge>
                         </TableCell>
