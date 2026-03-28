@@ -4,7 +4,13 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-export function SourceForm({ onSuccess, onCancel }: { onSuccess: () => void, onCancel: () => void }) {
+export function SourceForm({
+  onSuccess,
+  onCancel,
+}: {
+  onSuccess: () => void;
+  onCancel: () => void;
+}) {
   const [name, setName] = useState("");
   const [url, setUrl] = useState("");
   const [type, setType] = useState("openapi");
@@ -18,14 +24,19 @@ export function SourceForm({ onSuccess, onCancel }: { onSuccess: () => void, onC
     if (!token) return;
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/api/sources/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+      const res = await fetch(
+        `${
+          process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
+        }/api/sources/`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ name, url, type, polling_frequency: 60 }),
         },
-        body: JSON.stringify({ name, url, type, polling_frequency: 60 }),
-      });
+      );
 
       if (!res.ok) {
         const data = await res.json();
@@ -39,11 +50,16 @@ export function SourceForm({ onSuccess, onCancel }: { onSuccess: () => void, onC
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 bg-background p-4 border rounded-md shadow-sm">
+    <form
+      onSubmit={handleSubmit}
+      className="space-y-4 bg-background p-4 border rounded-md shadow-sm"
+    >
       <h3 className="text-lg font-semibold">Add Source</h3>
       {error && <div className="text-danger text-sm">{error}</div>}
       <div className="space-y-2">
-        <label htmlFor="name" className="text-sm font-medium">Name</label>
+        <label htmlFor="name" className="text-sm font-medium">
+          Name
+        </label>
         <Input
           id="name"
           value={name}
@@ -52,7 +68,9 @@ export function SourceForm({ onSuccess, onCancel }: { onSuccess: () => void, onC
         />
       </div>
       <div className="space-y-2">
-        <label htmlFor="url" className="text-sm font-medium">URL</label>
+        <label htmlFor="url" className="text-sm font-medium">
+          URL
+        </label>
         <Input
           id="url"
           type="url"
@@ -63,7 +81,9 @@ export function SourceForm({ onSuccess, onCancel }: { onSuccess: () => void, onC
         />
       </div>
       <div className="space-y-2">
-        <label htmlFor="type" className="text-sm font-medium">Type</label>
+        <label htmlFor="type" className="text-sm font-medium">
+          Type
+        </label>
         <select
           id="type"
           value={type}
@@ -76,7 +96,9 @@ export function SourceForm({ onSuccess, onCancel }: { onSuccess: () => void, onC
         </select>
       </div>
       <div className="flex gap-2 justify-end pt-4">
-        <Button type="button" variant="ghost" onClick={onCancel}>Cancel</Button>
+        <Button type="button" variant="ghost" onClick={onCancel}>
+          Cancel
+        </Button>
         <Button type="submit">Save Source</Button>
       </div>
     </form>

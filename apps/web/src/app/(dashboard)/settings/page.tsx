@@ -70,7 +70,9 @@ export default function SettingsPage() {
                   Receive email notifications for breaking changes.
                 </p>
               </div>
-              <Button variant="secondary" className="h-8">Enable</Button>
+              <Button variant="secondary" className="h-8">
+                Enable
+              </Button>
             </div>
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
@@ -79,7 +81,9 @@ export default function SettingsPage() {
                   Send updates to a designated Slack channel.
                 </p>
               </div>
-              <Button variant="secondary" className="h-8">Connect</Button>
+              <Button variant="secondary" className="h-8">
+                Connect
+              </Button>
             </div>
           </CardContent>
         </Card>
@@ -87,19 +91,21 @@ export default function SettingsPage() {
         <Card>
           <CardHeader>
             <CardTitle>Danger Zone</CardTitle>
-            <CardDescription>
-              Irreversible destructive actions.
-            </CardDescription>
+            <CardDescription>Irreversible destructive actions.</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
-                <p className="text-sm font-medium text-danger">Delete Workspace</p>
+                <p className="text-sm font-medium text-danger">
+                  Delete Workspace
+                </p>
                 <p className="text-xs text-text-muted">
                   Permanently remove your workspace and all data.
                 </p>
               </div>
-              <Button variant="destructive" className="h-8">Delete</Button>
+              <Button variant="destructive" className="h-8">
+                Delete
+              </Button>
             </div>
           </CardContent>
         </Card>

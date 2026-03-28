@@ -1,10 +1,18 @@
+import os
+import sys
 from typing import List
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-import models
-import schemas
-import database
-import auth
+
+# Add worker to sys.path to import celery app
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", "worker"))
+from celery_app import fetch_source  # noqa: E402
+
+import auth  # noqa: E402
+import database  # noqa: E402
+import models  # noqa: E402
+import schemas  # noqa: E402
 
 router = APIRouter(prefix="/api/sources", tags=["Sources"])
 
@@ -117,3 +125,24 @@ def delete_source(
     db.delete(db_source)
     db.commit()
     return None
+
+
+@router.post("/{source_id}/fetch", status_code=status.HTTP_202_ACCEPTED)
+def fetch_source_manual(
+    source_id: int,
+    db: Session = Depends(database.get_db),
+    current_user: models.User = Depends(auth.get_current_user),
+):
+    db_source = (
+        db.query(models.Source)
+        .filter(
+            models.Source.id == source_id,
+            models.Source.owner_id == current_user.id,
+        )
+        .first()
+    )
+    if db_source is None:
+        raise HTTPException(status_code=404, detail="Source not found")
+
+    fetch_source.delay(source_id)
+    return {"message": "Fetch job enqueued"}

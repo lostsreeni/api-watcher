@@ -24,13 +24,13 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             "bg-transparent text-foreground hover:bg-surface-muted":
               variant === "ghost",
           },
-          className
+          className,
         )}
         ref={ref}
         {...props}
       />
     );
-  }
+  },
 );
 Button.displayName = "Button";
 

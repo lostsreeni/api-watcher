@@ -39,11 +39,16 @@ export default function SourcesPage() {
   const fetchSources = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/api/sources/`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
+      const res = await fetch(
+        `${
+          process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
+        }/api/sources/`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
       if (res.ok) {
         const data = await res.json();
         setSources(data);
@@ -62,12 +67,17 @@ export default function SourcesPage() {
   const handleDelete = async (id: number) => {
     try {
       const token = localStorage.getItem("token");
-      await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/api/sources/${id}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
+      await fetch(
+        `${
+          process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
+        }/api/sources/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
       fetchSources();
     } catch (e) {
       console.error(e);
@@ -78,14 +88,19 @@ export default function SourcesPage() {
     try {
       const token = localStorage.getItem("token");
       const newStatus = currentStatus === "paused" ? "active" : "paused";
-      await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/api/sources/${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
+      await fetch(
+        `${
+          process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
+        }/api/sources/${id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ status: newStatus }),
         },
-        body: JSON.stringify({ status: newStatus })
-      });
+      );
       fetchSources();
     } catch (e) {
       console.error(e);
@@ -102,14 +117,23 @@ export default function SourcesPage() {
   const handleEditSave = async (id: number) => {
     try {
       const token = localStorage.getItem("token");
-      await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/api/sources/${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
+      await fetch(
+        `${
+          process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
+        }/api/sources/${id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            name: editName,
+            url: editUrl,
+            type: editType,
+          }),
         },
-        body: JSON.stringify({ name: editName, url: editUrl, type: editType })
-      });
+      );
       setEditingSourceId(null);
       fetchSources();
     } catch (e) {
@@ -133,7 +157,13 @@ export default function SourcesPage() {
       <div className="p-6">
         {isAdding && (
           <div className="mb-6 max-w-lg">
-            <SourceForm onSuccess={() => { setIsAdding(false); fetchSources(); }} onCancel={() => setIsAdding(false)} />
+            <SourceForm
+              onSuccess={() => {
+                setIsAdding(false);
+                fetchSources();
+              }}
+              onCancel={() => setIsAdding(false)}
+            />
           </div>
         )}
 
@@ -162,11 +192,21 @@ export default function SourcesPage() {
             <TableBody>
               {loading ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center py-4 text-text-muted">Loading...</TableCell>
+                  <TableCell
+                    colSpan={5}
+                    className="text-center py-4 text-text-muted"
+                  >
+                    Loading...
+                  </TableCell>
                 </TableRow>
               ) : sources.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center py-4 text-text-muted">No sources found. Add one to get started.</TableCell>
+                  <TableCell
+                    colSpan={5}
+                    className="text-center py-4 text-text-muted"
+                  >
+                    No sources found. Add one to get started.
+                  </TableCell>
                 </TableRow>
               ) : (
                 sources.map((source) => (
@@ -174,62 +214,128 @@ export default function SourcesPage() {
                     {editingSourceId === source.id ? (
                       <>
                         <TableCell>
-                          <Input value={editName} onChange={(e) => setEditName(e.target.value)} />
+                          <Input
+                            value={editName}
+                            onChange={(e) => setEditName(e.target.value)}
+                          />
                         </TableCell>
                         <TableCell>
                           <div className="flex flex-col gap-2">
-                             <Input value={editUrl} onChange={(e) => setEditUrl(e.target.value)} className="h-8 text-xs" />
-                             <select
-                                value={editType}
-                                onChange={(e) => setEditType(e.target.value)}
-                                className="flex h-8 w-full rounded-md border border-border bg-background px-3 py-1 text-xs ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                              >
-                                <option value="openapi">OpenAPI</option>
-                                <option value="docs">Docs</option>
-                                <option value="sdk">SDK</option>
-                              </select>
+                            <Input
+                              value={editUrl}
+                              onChange={(e) => setEditUrl(e.target.value)}
+                              className="h-8 text-xs"
+                            />
+                            <select
+                              value={editType}
+                              onChange={(e) => setEditType(e.target.value)}
+                              className="flex h-8 w-full rounded-md border border-border bg-background px-3 py-1 text-xs ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                            >
+                              <option value="openapi">OpenAPI</option>
+                              <option value="docs">Docs</option>
+                              <option value="sdk">SDK</option>
+                            </select>
                           </div>
                         </TableCell>
                         <TableCell>
-                           <Badge variant={source.status === "paused" ? "warning" : source.status === "error" ? "breaking" : "info"}>
-                             {source.status}
-                           </Badge>
+                          <Badge
+                            variant={
+                              source.status === "paused"
+                                ? "warning"
+                                : source.status === "error"
+                                ? "breaking"
+                                : "info"
+                            }
+                          >
+                            {source.status}
+                          </Badge>
                         </TableCell>
                         <TableCell className="text-text-muted">
-                           {source.last_checked_at ? new Date(source.last_checked_at).toLocaleString() : "Never"}
+                          {source.last_checked_at
+                            ? new Date(source.last_checked_at).toLocaleString()
+                            : "Never"}
                         </TableCell>
                         <TableCell className="text-right flex gap-2 justify-end">
-                           <Button className="h-8 px-2 text-xs" onClick={() => handleEditSave(source.id)}>Save</Button>
-                           <Button className="h-8 px-2 text-xs" variant="ghost" onClick={() => setEditingSourceId(null)}>Cancel</Button>
+                          <Button
+                            className="h-8 px-2 text-xs"
+                            onClick={() => handleEditSave(source.id)}
+                          >
+                            Save
+                          </Button>
+                          <Button
+                            className="h-8 px-2 text-xs"
+                            variant="ghost"
+                            onClick={() => setEditingSourceId(null)}
+                          >
+                            Cancel
+                          </Button>
                         </TableCell>
                       </>
                     ) : (
                       <>
                         <TableCell className="font-medium">
-                          <a href={`/sources/${source.id}`} className="hover:underline text-primary">
+                          <a
+                            href={`/sources/${source.id}`}
+                            className="hover:underline text-primary"
+                          >
                             {source.name}
                           </a>
                         </TableCell>
                         <TableCell>
-                           <div className="text-xs text-text-muted max-w-[200px] truncate" title={source.url}>{source.url}</div>
-                           <div className="capitalize text-xs font-medium">{source.type}</div>
+                          <div
+                            className="text-xs text-text-muted max-w-[200px] truncate"
+                            title={source.url}
+                          >
+                            {source.url}
+                          </div>
+                          <div className="capitalize text-xs font-medium">
+                            {source.type}
+                          </div>
                         </TableCell>
                         <TableCell>
-                          <Badge variant={source.status === "paused" ? "warning" : source.status === "error" ? "breaking" : "info"}>
+                          <Badge
+                            variant={
+                              source.status === "paused"
+                                ? "warning"
+                                : source.status === "error"
+                                ? "breaking"
+                                : "info"
+                            }
+                          >
                             {source.status}
                           </Badge>
                         </TableCell>
                         <TableCell className="text-text-muted">
-                          {source.last_checked_at ? new Date(source.last_checked_at).toLocaleString() : "Never"}
+                          {source.last_checked_at
+                            ? new Date(source.last_checked_at).toLocaleString()
+                            : "Never"}
                         </TableCell>
                         <TableCell className="text-right flex gap-2 justify-end">
-                          <Button variant="ghost" className="h-8 w-8 p-0" onClick={() => handleToggleStatus(source.id, source.status)}>
-                            {source.status === "paused" ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
+                          <Button
+                            variant="ghost"
+                            className="h-8 w-8 p-0"
+                            onClick={() =>
+                              handleToggleStatus(source.id, source.status)
+                            }
+                          >
+                            {source.status === "paused" ? (
+                              <Play className="h-4 w-4" />
+                            ) : (
+                              <Pause className="h-4 w-4" />
+                            )}
                           </Button>
-                          <Button variant="ghost" className="h-8 w-8 p-0" onClick={() => handleEditClick(source)}>
+                          <Button
+                            variant="ghost"
+                            className="h-8 w-8 p-0"
+                            onClick={() => handleEditClick(source)}
+                          >
                             <Edit className="h-4 w-4" />
                           </Button>
-                          <Button variant="ghost" className="h-8 w-8 p-0 text-danger hover:text-danger hover:bg-danger/10" onClick={() => handleDelete(source.id)}>
+                          <Button
+                            variant="ghost"
+                            className="h-8 w-8 p-0 text-danger hover:text-danger hover:bg-danger/10"
+                            onClick={() => handleDelete(source.id)}
+                          >
                             <Trash2 className="h-4 w-4" />
                           </Button>
                         </TableCell>
