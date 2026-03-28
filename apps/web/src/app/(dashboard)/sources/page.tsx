@@ -16,8 +16,17 @@ import { Badge } from "@/components/ui/badge";
 import { SourceForm } from "@/components/sources/source-form";
 import { Input } from "@/components/ui/input";
 
+interface Source {
+  id: number;
+  name: string;
+  url: string;
+  type: string;
+  status: string;
+  last_checked_at: string | null;
+}
+
 export default function SourcesPage() {
-  const [sources, setSources] = useState<any[]>([]);
+  const [sources, setSources] = useState<Source[]>([]);
   const [isAdding, setIsAdding] = useState(false);
   const [editingSourceId, setEditingSourceId] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
@@ -83,7 +92,7 @@ export default function SourcesPage() {
     }
   };
 
-  const handleEditClick = (source: any) => {
+  const handleEditClick = (source: Source) => {
     setEditingSourceId(source.id);
     setEditName(source.name);
     setEditUrl(source.url);

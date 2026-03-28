@@ -35,8 +35,8 @@ export default function LoginPage() {
       const data = await res.json();
       localStorage.setItem("token", data.access_token);
       router.push("/");
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "An error occurred");
     }
   };
 
@@ -75,7 +75,7 @@ export default function LoginPage() {
           <CardFooter className="flex flex-col gap-2">
             <Button type="submit" className="w-full">Sign in</Button>
             <Button variant="ghost" onClick={() => router.push("/register")} className="w-full">
-              Don't have an account? Sign up
+              Don&apos;t have an account? Sign up
             </Button>
           </CardFooter>
         </form>

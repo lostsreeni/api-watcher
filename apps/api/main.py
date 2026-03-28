@@ -20,6 +20,7 @@ app.add_middleware(
 app.include_router(auth.router)
 app.include_router(routers_sources.router)
 
+
 @app.get("/")
 def read_root():
     return {"status": "ok", "service": "api"}
