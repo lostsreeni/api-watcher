@@ -91,3 +91,26 @@ class FetchLog(Base):
     created_at = Column(DateTime(timezone=True), default=datetime.datetime.utcnow)
 
     source = relationship("Source", back_populates="fetch_logs")
+
+
+class Changelog(Base):
+    __tablename__ = "changelogs"
+
+    id = Column(Integer, primary_key=True, index=True)
+    source_id = Column(Integer, ForeignKey("sources.id"), nullable=False)
+
+    old_snapshot_id = Column(Integer, ForeignKey("snapshots.id"), nullable=True)
+    new_snapshot_id = Column(Integer, ForeignKey("snapshots.id"), nullable=False)
+
+    changes = Column(String, nullable=False)  # JSON list of changes
+    severity = Column(
+        String, nullable=False
+    )  # e.g. "breaking", "added", "modified", "informational"
+    migration_notes = Column(String, nullable=True)
+    changelog_summary = Column(String, nullable=True)
+
+    created_at = Column(DateTime(timezone=True), default=datetime.datetime.utcnow)
+
+    source = relationship("Source", backref="changelogs")
+    old_snapshot = relationship("Snapshot", foreign_keys=[old_snapshot_id])
+    new_snapshot = relationship("Snapshot", foreign_keys=[new_snapshot_id])
