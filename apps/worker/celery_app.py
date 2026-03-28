@@ -5,13 +5,22 @@ import sys
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "api"))
 
 import hashlib  # noqa: E402
+import json  # noqa: E402
 from datetime import datetime  # noqa: E402
 
 import requests  # noqa: E402
 from celery import Celery  # noqa: E402
 from database import SessionLocal  # noqa: E402
-from models import FetchLog, Snapshot, Source, SourceStatus, SourceType  # noqa: E402
+from models import (  # noqa: E402
+    FetchLog,
+    Snapshot,
+    Source,
+    SourceStatus,
+    SourceType,
+    Changelog,
+)
 from normalizer import normalize_docs, normalize_openapi  # noqa: E402
+from diff_engine import generate_diff, generate_changelog_summary  # noqa: E402
 
 redis_url = os.getenv("REDIS_URL", "redis://localhost:6379/0")
 
@@ -68,6 +77,67 @@ def fetch_source(self, source_id: int):
                     parsed_content=parsed_content,
                 )
                 db.add(snapshot)
+                db.commit()  # Commit to get snapshot ID
+                db.refresh(snapshot)
+
+                if latest_snapshot:
+                    changes = generate_diff(
+                        source.type.value,
+                        latest_snapshot.parsed_content,
+                        snapshot.parsed_content,
+                    )
+                    if changes:
+                        severity = "modified"
+                        # Determine overall severity
+                        for c in changes:
+                            c_sev = c.get("severity", "modified")
+                            if c_sev == "breaking":
+                                severity = "breaking"
+                                break
+                            elif c_sev == "added" and severity != "breaking":
+                                severity = "added"
+                            elif c_sev == "modified" and severity not in [
+                                "breaking",
+                                "added",
+                            ]:
+                                severity = "modified"
+                            elif c_sev == "informational" and severity not in [
+                                "breaking",
+                                "added",
+                                "modified",
+                            ]:
+                                severity = "informational"
+
+                        summary = generate_changelog_summary(changes)
+
+                        changelog = Changelog(
+                            source_id=source_id,
+                            old_snapshot_id=latest_snapshot.id,
+                            new_snapshot_id=snapshot.id,
+                            changes=json.dumps(changes),
+                            severity=severity,
+                            changelog_summary=summary,
+                        )
+                        db.add(changelog)
+                else:
+                    # First snapshot
+                    changelog = Changelog(
+                        source_id=source_id,
+                        old_snapshot_id=None,
+                        new_snapshot_id=snapshot.id,
+                        changes=json.dumps(
+                            [
+                                {
+                                    "type": "initial_fetch",
+                                    "details": "Initial source fetch",
+                                    "severity": "informational",
+                                }
+                            ]
+                        ),
+                        severity="informational",
+                        changelog_summary="Initial fetch of the source.",
+                    )
+                    db.add(changelog)
 
                 log = FetchLog(source_id=source_id, status="success")
                 source.last_change_detected_at = datetime.utcnow()
