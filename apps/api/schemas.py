@@ -17,6 +17,21 @@ class UserResponse(BaseModel):
         from_attributes = True
 
 
+class ChangelogResponse(BaseModel):
+    id: int
+    source_id: int
+    old_snapshot_id: Optional[int] = None
+    new_snapshot_id: int
+    changes: str
+    severity: str
+    migration_notes: Optional[str] = None
+    changelog_summary: Optional[str] = None
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
 class SnapshotResponse(BaseModel):
     id: int
     source_id: int
@@ -49,6 +64,8 @@ class SourceBase(BaseModel):
     type: SourceType
     url: str  # String due to HttpUrl issues
     polling_frequency: int = Field(default=60, ge=1)  # 1 minute minimum
+    alert_email: Optional[EmailStr] = None
+    alert_slack_webhook: Optional[str] = None
 
 
 class SourceCreate(SourceBase):
@@ -61,6 +78,8 @@ class SourceUpdate(BaseModel):
     url: Optional[str] = None
     polling_frequency: Optional[int] = Field(None, ge=1)
     status: Optional[SourceStatus] = None
+    alert_email: Optional[EmailStr] = None
+    alert_slack_webhook: Optional[str] = None
 
 
 class SourceResponse(SourceBase):

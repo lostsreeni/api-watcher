@@ -27,6 +27,25 @@ redis_url = os.getenv("REDIS_URL", "redis://localhost:6379/0")
 app = Celery("worker", broker=redis_url, backend=redis_url)
 
 
+def send_alerts(source: Source, changelog: Changelog):
+    if source.alert_email:
+        print(
+            f"MOCK EMAIL: Sending alert to {source.alert_email} for source '{source.name}'. "
+            f"Severity: {changelog.severity}. Summary: {changelog.changelog_summary}"
+        )
+
+    if source.alert_slack_webhook:
+        try:
+            payload = {
+                "text": f"*{source.name}* update detected!\n"
+                        f"*Severity*: {changelog.severity}\n"
+                        f"*Summary*:\n{changelog.changelog_summary}"
+            }
+            requests.post(source.alert_slack_webhook, json=payload, timeout=10)
+        except Exception as e:
+            print(f"Failed to send Slack alert: {e}")
+
+
 @app.task(bind=True, max_retries=3, default_retry_delay=60)
 def fetch_source(self, source_id: int):
     db = SessionLocal()
@@ -119,6 +138,7 @@ def fetch_source(self, source_id: int):
                             changelog_summary=summary,
                         )
                         db.add(changelog)
+                        send_alerts(source, changelog)
                 else:
                     # First snapshot
                     changelog = Changelog(

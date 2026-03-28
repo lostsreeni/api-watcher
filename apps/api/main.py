@@ -20,6 +20,12 @@ app.add_middleware(
 app.include_router(auth.router)
 app.include_router(routers_sources.router)
 
+import routers_changelog
+app.include_router(routers_changelog.router)
+app.include_router(routers_changelog.changelog_router)
+import routers_system
+app.include_router(routers_system.router)
+
 
 @app.get("/")
 def read_root():

@@ -43,6 +43,9 @@ class Source(Base):
     polling_frequency = Column(Integer, default=60)  # minutes
     status = Column(Enum(SourceStatus), default=SourceStatus.active)
 
+    alert_email = Column(String, nullable=True)
+    alert_slack_webhook = Column(String, nullable=True)
+
     last_checked_at = Column(DateTime(timezone=True), nullable=True)
     last_change_detected_at = Column(DateTime(timezone=True), nullable=True)
 

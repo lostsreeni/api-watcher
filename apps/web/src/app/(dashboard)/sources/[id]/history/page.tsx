@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { TopNav } from "@/components/layout/top-nav";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Clock } from "lucide-react";
@@ -17,6 +20,32 @@ export default function SourceHistoryPage({
 }: {
   params: { id: string };
 }) {
+  const [changelogs, setChangelogs] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchChangelogs = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/api/sources/${params.id}/changelogs`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        if (res.ok) {
+          const data = await res.json();
+          setChangelogs(data);
+        }
+      } catch (e) {
+        console.error("Failed to fetch changelogs", e);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchChangelogs();
+  }, [params.id]);
+
   return (
     <div className="flex flex-col min-h-screen">
       <TopNav
@@ -37,7 +66,7 @@ export default function SourceHistoryPage({
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Snapshot ID</TableHead>
+                <TableHead>Changelog ID</TableHead>
                 <TableHead>Timestamp</TableHead>
                 <TableHead>Changes Detected</TableHead>
                 <TableHead>Severity</TableHead>
@@ -45,32 +74,49 @@ export default function SourceHistoryPage({
               </TableRow>
             </TableHeader>
             <TableBody>
-              {[1, 2, 3, 4, 5].map((i) => (
-                <TableRow key={i}>
-                  <TableCell className="font-mono text-sm text-primary hover:underline cursor-pointer">
-                    snap_{Math.random().toString(36).substring(7)}
-                  </TableCell>
-                  <TableCell className="flex items-center gap-2 text-text-muted">
-                    <Clock className="h-3 w-3" />
-                    {new Date(Date.now() - i * 10000000).toLocaleString()}
-                  </TableCell>
-                  <TableCell>{i * 2} endpoints affected</TableCell>
-                  <TableCell>
-                    {i === 1 ? (
-                      <Badge variant="breaking">Breaking</Badge>
-                    ) : i % 2 === 0 ? (
-                      <Badge variant="modified">Modified</Badge>
-                    ) : (
-                      <Badge variant="info">No changes</Badge>
-                    )}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <Button variant="ghost" className="h-8 px-2 text-xs">
-                      View Diff
-                    </Button>
-                  </TableCell>
+              {loading ? (
+                <TableRow>
+                  <TableCell colSpan={5} className="text-center py-4 text-text-muted">Loading history...</TableCell>
                 </TableRow>
-              ))}
+              ) : changelogs.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={5} className="text-center py-4 text-text-muted">No history found.</TableCell>
+                </TableRow>
+              ) : (
+                changelogs.map((log) => {
+                  let parsedChanges = [];
+                  try {
+                    parsedChanges = JSON.parse(log.changes);
+                  } catch (e) {
+                    // Ignore parse error
+                  }
+
+                  return (
+                    <TableRow key={log.id}>
+                      <TableCell className="font-mono text-sm text-primary hover:underline cursor-pointer">
+                        <Link href={`/changelogs/${log.id}`}>
+                          cl_{log.id}
+                        </Link>
+                      </TableCell>
+                      <TableCell className="flex items-center gap-2 text-text-muted">
+                        <Clock className="h-3 w-3" />
+                        {new Date(log.created_at).toLocaleString()}
+                      </TableCell>
+                      <TableCell>{parsedChanges.length} change(s)</TableCell>
+                      <TableCell>
+                        <Badge variant={log.severity as any}>{log.severity}</Badge>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Link href={`/changelogs/${log.id}`}>
+                          <Button variant="ghost" className="h-8 px-2 text-xs">
+                            View Detail
+                          </Button>
+                        </Link>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })
+              )}
             </TableBody>
           </Table>
         </div>
