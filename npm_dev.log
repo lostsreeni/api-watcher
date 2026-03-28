@@ -1,0 +1,24 @@
+
+> web@0.1.0 dev
+> next dev
+
+  ▲ Next.js 14.2.35
+  - Local:        http://localhost:3000
+
+ ✓ Starting...
+ ✓ Ready in 3.5s
+ ○ Compiling /register ...
+ ✓ Compiled /register in 6s (539 modules)
+ GET /register 200 in 6675ms
+ ✓ Compiled in 721ms (256 modules)
+ ○ Compiling /sources ...
+ ✓ Compiled /sources in 1182ms (618 modules)
+ GET /sources 200 in 1378ms
+ ✓ Compiled /login in 293ms (624 modules)
+ ✓ Compiled / in 358ms (645 modules)
+ GET /sources 200 in 101ms
+ ○ Compiling /sources/[id] ...
+ ✓ Compiled /sources/[id] in 796ms (702 modules)
+ GET /sources/4 200 in 1552ms
+ ✓ Compiled /settings/logs in 460ms (708 modules)
+ GET /settings/logs 200 in 535ms
