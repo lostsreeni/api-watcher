@@ -21,9 +21,11 @@ export default function SourceDetailPage({
 }: {
   params: { id: string };
 }) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [source, setSource] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [syncing, setSyncing] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [changelogs, setChangelogs] = useState<any[]>([]);
 
   const [alertEmail, setAlertEmail] = useState("");
@@ -76,6 +78,7 @@ export default function SourceDetailPage({
       setLoading(false);
     };
     init();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.id]);
 
   const handleSync = async () => {
@@ -233,6 +236,7 @@ export default function SourceDetailPage({
                 {latestChangelog ? (
                   <div>
                     <div className="mb-4">
+                      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                       <Badge variant={latestChangelog.severity as any}>
                         {latestChangelog.severity}
                       </Badge>
@@ -279,6 +283,7 @@ export default function SourceDetailPage({
                         <div className="text-xs text-text-muted">{new Date(log.created_at).toLocaleString()}</div>
                       </div>
                       <div className="flex items-center gap-4">
+                        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                         <Badge variant={log.severity as any}>{log.severity}</Badge>
                         <Link href={`/changelogs/${log.id}`}>
                           <Button variant="ghost" size="sm">View</Button>

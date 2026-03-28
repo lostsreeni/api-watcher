@@ -14,11 +14,18 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
+interface Change {
+  type: string;
+  details: string;
+  severity?: string;
+}
+
 export default function ChangelogDetailPage({
   params,
 }: {
   params: { id: string };
 }) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [changelog, setChangelog] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
@@ -53,14 +60,14 @@ export default function ChangelogDetailPage({
     return <div className="p-6 text-center text-text-muted">Changelog not found.</div>;
   }
 
-  let changesList = [];
+  let changesList: Change[] = [];
   try {
     changesList = JSON.parse(changelog.changes);
-  } catch (e) {
-    console.error("Failed to parse changes JSON");
+  } catch (err) {
+    console.error("Failed to parse changes JSON", err);
   }
 
-  const groupedChanges = changesList.reduce((acc: any, change: any) => {
+  const groupedChanges = changesList.reduce((acc: Record<string, Change[]>, change: Change) => {
     const s = change.severity || "informational";
     if (!acc[s]) acc[s] = [];
     acc[s].push(change);
@@ -84,6 +91,7 @@ export default function ChangelogDetailPage({
 
       <div className="flex-1 p-6 space-y-6">
         <div className="flex items-center gap-4">
+          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
           <Badge variant={changelog.severity as any} className="text-lg py-1 px-3">
             {changelog.severity.toUpperCase()}
           </Badge>
@@ -125,10 +133,11 @@ export default function ChangelogDetailPage({
                 return (
                   <div key={severityType}>
                     <h4 className="text-sm font-bold uppercase tracking-wide mb-2 flex items-center gap-2">
+                      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                       <Badge variant={severityType as any}>{severityType}</Badge>
                     </h4>
                     <ul className="space-y-2">
-                      {groupedChanges[severityType].map((change: any, i: number) => (
+                      {groupedChanges[severityType].map((change: Change, i: number) => (
                         <li key={i} className="text-sm border-l-2 border-border pl-3 ml-1 py-1">
                           <span className="font-mono text-xs text-primary bg-surface py-0.5 px-1 rounded mr-2">
                             {change.type}

@@ -13,6 +13,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 
 export default function SystemLogsPage() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [logs, setLogs] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 

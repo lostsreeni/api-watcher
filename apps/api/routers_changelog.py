@@ -1,6 +1,6 @@
 from typing import List
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 import auth
@@ -9,6 +9,7 @@ import models
 import schemas
 
 router = APIRouter(prefix="/api/sources/{source_id}", tags=["Changelogs"])
+
 
 @router.get("/changelogs", response_model=List[schemas.ChangelogResponse])
 def get_changelogs(
@@ -32,7 +33,9 @@ def get_changelogs(
     )
     return changelogs
 
+
 changelog_router = APIRouter(prefix="/api/changelogs", tags=["Changelogs"])
+
 
 @changelog_router.get("/{changelog_id}", response_model=schemas.ChangelogResponse)
 def get_changelog(

@@ -20,6 +20,7 @@ export default function SourceHistoryPage({
 }: {
   params: { id: string };
 }) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [changelogs, setChangelogs] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -87,8 +88,8 @@ export default function SourceHistoryPage({
                   let parsedChanges = [];
                   try {
                     parsedChanges = JSON.parse(log.changes);
-                  } catch (e) {
-                    // Ignore parse error
+                  } catch (err) {
+                    console.error(err);
                   }
 
                   return (
@@ -104,6 +105,7 @@ export default function SourceHistoryPage({
                       </TableCell>
                       <TableCell>{parsedChanges.length} change(s)</TableCell>
                       <TableCell>
+                        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                         <Badge variant={log.severity as any}>{log.severity}</Badge>
                       </TableCell>
                       <TableCell className="text-right">

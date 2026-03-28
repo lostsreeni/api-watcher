@@ -10,6 +10,7 @@ import auth
 
 router = APIRouter(prefix="/api/system", tags=["System"])
 
+
 @router.get("/logs", response_model=List[schemas.FetchLogResponse])
 def get_system_logs(
     db: Session = Depends(database.get_db),
