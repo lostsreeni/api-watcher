@@ -30,6 +30,16 @@ services:
     depends_on:
       - redis
 
+  beat:
+    build:
+      context: ./apps/worker
+      dockerfile: Dockerfile
+    command: celery -A celery_app beat -l info
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      - redis
+
   redis:
     image: redis:7-alpine
     ports:

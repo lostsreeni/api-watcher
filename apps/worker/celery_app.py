@@ -24,7 +24,30 @@ from diff_engine import generate_diff, generate_changelog_summary  # noqa: E402
 
 redis_url = os.getenv("REDIS_URL", "redis://localhost:6379/0")
 
+from celery.schedules import crontab  # noqa: E402
+
 app = Celery("worker", broker=redis_url, backend=redis_url)
+
+app.conf.beat_schedule = {
+    "fetch-all-sources-hourly": {
+        "task": "celery_app.schedule_fetches",
+        "schedule": crontab(minute="0"),  # Runs at the start of every hour
+    },
+}
+
+
+@app.task
+def schedule_fetches():
+    db = SessionLocal()
+    try:
+        # Fetch all sources that are active
+        # We could filter by polling_frequency and last_checked_at to run exactly on schedule,
+        # but as a start, we'll fetch all active sources periodically.
+        sources = db.query(Source).filter(Source.status == SourceStatus.active).all()
+        for source in sources:
+            fetch_source.delay(source.id)
+    finally:
+        db.close()
 
 
 def send_alerts(source: Source, changelog: Changelog):
